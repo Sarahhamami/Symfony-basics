@@ -1,0 +1,38 @@
+{% if list is empty %}
+    <h1>Liste est vide</h1>
+{% elseif list is not defined %}
+    <h1>Liste n'est pas définie</h1>
+{% else %}
+    <table border="1">
+        <tr>
+            <td>#</td>
+            <td>Username</td>
+            <td>Picture</td>
+            <td>Email</td>
+            <td>Nb Books</td>
+            <td>Détails</td>
+        </tr>
+      
+        {% for i in list %}
+            <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.username }}</td>
+                <td><img src="{{ i.picture }}" height="150" width="200" alt="User Picture"></td>
+                <td>{{ i.email }}</td>
+                <td>{{ i.nb_books }}</td>
+          <td><a href="{{ path('author_detail', {'id': i.id}) }}">more details</a></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h1>
+        {% for i in list %}
+            {{ i.username | upper }}
+        {% endfor %}
+    </h1>
+
+    <h1>Le nombre des auteurs est : {{ list | length }}</h1>
+    <h1>Le nombre total des livres de tous les auteurs est : {{ sum }}</h1>
+    
+{% endif %}
