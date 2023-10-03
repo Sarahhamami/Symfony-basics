@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Author;
+use App\Form\AuthorType;
+use App\Repository\AuthorRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -46,6 +51,7 @@ class AuthorController extends AbstractController
     public function authorDetail($id): Response
     {
         
+        $authById=null;
             foreach ($this->authors as $auth) {
                 if ($auth['id'] == $id) {
                     $authById = $auth;
@@ -56,5 +62,30 @@ class AuthorController extends AbstractController
             'authById' => $authById,
         ]);
     }
-    
+    #[Route('/listAuthor', name: 'list')]
+    public function listAuthors(AuthorRepository $repo): Response
+    {
+
+        return $this->render('author/listAuthors.html.twig', [
+            'list' => $repo->findAll(),
+        ]);
+    }
+    #[Route('/add', name: 'addAuthor')]
+    public function AddAuthor(ManagerRegistry $manager, Request $req): Response
+    {
+        
+        $em= $manager->getManager(); //Doctrine manager
+        $auth = new Author(); 
+        $form= $this->createForm(AuthorType::class,$auth );
+        // $auth->setUsername("Emna");
+        // $auth->setEmail("Emna@gmail.com");
+        $form->handleRequest($req);
+        if ($form->isSubmitted()){
+            $em->persist($auth);//Enregistrement 
+            $em->flush(); // pour executer
+            return $this->redirectToRoute("list");
+        }
+        return $this->renderForm("author/add.html.twig", ["form"=>$form]);
+    }
+
 }
