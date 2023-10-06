@@ -65,7 +65,6 @@ class AuthorController extends AbstractController
     #[Route('/listAuthor', name: 'list')]
     public function listAuthors(AuthorRepository $repo): Response
     {
-
         return $this->render('author/listAuthors.html.twig', [
             'list' => $repo->findAll(),
         ]);
@@ -87,5 +86,27 @@ class AuthorController extends AbstractController
         }
         return $this->renderForm("author/add.html.twig", ["form"=>$form]);
     }
-
+    #[Route('/edit/{id}', name: 'editAuthor')]
+    public function editAuthor(ManagerRegistry $manager, Request $req, Author $author): Response
+    {  
+        $em= $manager->getManager(); //Doctrine manager
+        $form= $this->createForm(AuthorType::class,$author);
+        // $auth->setUsername("Emna");
+        // $auth->setEmail("Emna@gmail.com");
+        $form->handleRequest($req);
+        if ($form->isSubmitted()){
+            $em->persist($author);//Enregistrement 
+            $em->flush(); // pour executer
+            return $this->redirectToRoute("list");
+        }
+        return $this->renderForm("author/edit.html.twig", ["form"=>$form]);
+    }
+    #[Route('/delete/{id}', name: 'deleteAuthor')]
+    public function deleteAuthor(ManagerRegistry $manager, Request $req, Author $author): Response
+    {  
+        $em= $manager->getManager(); //Doctrine manager
+        $em->remove($author);
+        $em->flush(); // pour executer
+        return $this->renderForm("author/delete.html.twig", []);
+    }
 }
