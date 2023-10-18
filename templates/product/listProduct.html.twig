@@ -1,0 +1,22 @@
+<h1>List of products </h1>
+<table border="1" >
+<tr>
+
+<th>Title</th>
+<th>Qte</th>
+<th>categorie</th>
+<th>Actions</th>
+</tr>
+{% for i in list %}
+<tr>
+
+<td>{{i.Title}}</td>
+<td>{{i.Qte}}</td>
+<td>{{i.category}}</td>
+
+<td>
+<a href="{{ path('edit_product', {'id': i.code}) }}">edit</a>
+<a href="{{ path('delete_product', {'id': i.code}) }}">delete</a></td>
+</tr>
+{% endfor %}
+</table>

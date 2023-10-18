@@ -1,0 +1,11 @@
+<h1>List of books </h1>
+<table border="1" >
+<tr>Reference</tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+{% for i in list %}
+<td>{{i.ref}}</td>
+<tr>{{i.publicationDate | date}}</tr>
+{% endfor %}
+</table>
